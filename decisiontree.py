@@ -118,8 +118,9 @@ def majority_counts(class_label_list):
     import operator
     class_counts = {}
     for label in class_label_list:
-        if label not in class_counts.keys():
-            class_counts[label] = 0
+#        if label not in class_counts.keys():
+#            class_counts[label] = 0
+        class_counts.setdefault(label,0)
         class_counts[label] += 1
     sorted_class_counts_list = sorted(class_counts.iteritems(),
                                       key = operator.itemgetter(1), # 1表示元组列表根据第二项来排序
