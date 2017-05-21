@@ -51,6 +51,7 @@ def choose_best_split(data_set, leaf_type=reg_leaf, err_type=reg_err, ops=(1,4))
                 best_value = value
                 best_err = new_err
 #    print best_feat, best_value, best_err, err_type(data_set)
+    print "err",err_type(data_set) - best_err
     if err_type(data_set) - best_err < tol_s:
         return None, leaf_type(data_set)
 #    print best_feat, best_value
@@ -139,103 +140,105 @@ def get_num_node(tree):
         
 
 if __name__ == "__main__":
-##    np.random.seed(0)
-##    test_data = np.random.random((200,10))
-##    """
-##array([[ 1.,  0.,  0.,  0.],
-##       [ 0.,  1.,  0.,  0.],
-##       [ 0.,  0.,  1.,  0.],
-##       [ 0.,  0.,  0.,  1.]])
-##    """
-###    right_set, left_set = bin_split(test_data, 1, 0)
-###    print "data1:\n",right_set
-###    print "data2:\n",left_set
-##    
-##    feat, value = choose_best_split(test_data)
-##    print "Best Feature:", feat, "\nBest Value:", value
-##    
-##    right_set, left_set = bin_split(test_data, feat, value)
-##    print "Right Set:\n",right_set
-##    print "LeftSet:\n",left_set
-##    
-##    re_tree = create_tree(test_data)
+#    np.random.seed(0)
+#    test_data = np.random.random((200,10))
+#    """
+#array([[ 1.,  0.,  0.,  0.],
+#       [ 0.,  1.,  0.,  0.],
+#       [ 0.,  0.,  1.,  0.],
+#       [ 0.,  0.,  0.,  1.]])
+#    """
+##    right_set, left_set = bin_split(test_data, 1, 0)
+##    print "data1:\n",right_set
+##    print "data2:\n",left_set
 #    
-#    # Fitting
-#    data_set = load_dataset('ex0.txt')
-#    re_tree = create_tree(data_set,ops=(0.00001,2))
+#    feat, value = choose_best_split(test_data)
+#    print "Best Feature:", feat, "\nBest Value:", value
 #    
-##    pred = predict(re_tree, data_set[0,0:-1])
+#    right_set, left_set = bin_split(test_data, feat, value)
+#    print "Right Set:\n",right_set
+#    print "LeftSet:\n",left_set
 #    
-#    pred = np.zeros((len(data_set),1))
-#    for i in xrange(len(data_set)):
-#        pred[i,:] = predict(re_tree, data_set[i,0:-1])
-#    
-#    import matplotlib.pyplot as plt
-#    plt.scatter(data_set[:,1],data_set[:,2],c='b',label = "Origin")
-#    plt.scatter(data_set[:,1],pred,c='r',label = "Fit")
-#    plt.legend()
-#    plt.show()
-#    
-#    pred = pred[data_set[:,1].argsort(),:]
-#    data_set = data_set[data_set[:,1].argsort(),:]
-#    plt.plot(data_set[:,1],data_set[:,2],'b-',label = "Origin")
-#    plt.plot(data_set[:,1],pred,'r-.',label = "Fit")
-#    plt.legend()
-#    plt.show()
-#
-#    # testing
-#    test_data = load_dataset('ex1.txt')
-#    pred = np.zeros((len(test_data),1))
-#    for i in xrange(len(test_data)):
-#        pred[i,:] = predict(re_tree, test_data[i,0:-1])    
-#    err_no_prune = sum(np.power(test_data[:,-1] - pred.flatten(),2))
-#    
-#    pred = pred[test_data[:,1].argsort(),:]
-#    test_data = test_data[test_data[:,1].argsort(),:]
-#    plt.plot(test_data[:,1],test_data[:,2],'b-',label = "Origin")
-#    plt.plot(test_data[:,1],pred,'r-.',label = "Predict")
-#    plt.legend()
-#    plt.show()    
-#    
-#    # pruning
-#    test_data = load_dataset('ex1.txt')
-#    pruned_tree = prune(re_tree, test_data)
-#
-#    pred = np.zeros((len(data_set),1))
-#    for i in xrange(len(data_set)):
-#        pred[i,:] = predict(pruned_tree, data_set[i,0:-1])    
-#
-#    plt.scatter(data_set[:,1],data_set[:,2],c='b',label = "Origin")
-#    plt.scatter(data_set[:,1],pred,c='r',label = "Pruned Fit")
-#    plt.legend()
-#    plt.show()
-#    
-#    pred = pred[data_set[:,1].argsort(),:]
-#    data_set = data_set[data_set[:,1].argsort(),:]
-#    plt.plot(data_set[:,1],data_set[:,2],'b-',label = "Origin")
-#    plt.plot(data_set[:,1],pred,'r-.',label = "Pruned Fit")
-#    plt.legend()
-#    plt.show()
-#    
-#    # testiing
-#    pred = np.zeros((len(test_data),1))
-#    for i in xrange(len(test_data)):
-#        pred[i,:] = predict(pruned_tree, test_data[i,0:-1])    
-#
-#    pred = pred[test_data[:,1].argsort(),:]
-#    test_data = test_data[test_data[:,1].argsort(),:]
-#    plt.plot(test_data[:,1],test_data[:,2],'b-',label = "Origin")
-#    plt.plot(test_data[:,1],pred,'r-.',label = "Predict")
-#    plt.legend()
-#    plt.show()  
-#    err_prune = sum(np.power(test_data[:,-1] - pred.flatten(),2))
-#    
-#    print "Error:", err_no_prune
-#    print "Error Pruned:", err_prune
-#    
-#    
-#    tree = {"right":{"right":{"right":5, "left":6}, "left": 4}, "left":2}
-#    
+#    re_tree = create_tree(test_data)
+    
+    # Fitting
+    data_set = load_dataset('ex0.txt')
+    re_tree = create_tree(data_set,ops=(0.00001,2))
+    
+#    pred = predict(re_tree, data_set[0,0:-1])
+    
+    pred = np.zeros((len(data_set),1))
+    for i in xrange(len(data_set)):
+        pred[i,:] = predict(re_tree, data_set[i,0:-1])
+    
+    import matplotlib.pyplot as plt
+    plt.scatter(data_set[:,1],data_set[:,2],c='b',label = "Origin")
+    plt.scatter(data_set[:,1],pred,c='r',label = "Fit")
+    plt.legend()
+    plt.show()
+    
+    pred = pred[data_set[:,1].argsort(),:]
+    data_set = data_set[data_set[:,1].argsort(),:]
+    plt.plot(data_set[:,1],data_set[:,2],'b-',label = "Origin")
+    plt.plot(data_set[:,1],pred,'r-.',label = "Fit")
+    plt.legend()
+    plt.show()
+
+    # testing
+    test_data = load_dataset('ex1.txt')
+    pred = np.zeros((len(test_data),1))
+    for i in xrange(len(test_data)):
+        pred[i,:] = predict(re_tree, test_data[i,0:-1])    
+    err_no_prune = sum(np.power(test_data[:,-1] - pred.flatten(),2))
+    
+    pred = pred[test_data[:,1].argsort(),:]
+    test_data = test_data[test_data[:,1].argsort(),:]
+    plt.plot(test_data[:,1],test_data[:,2],'b-',label = "Origin")
+    plt.plot(test_data[:,1],pred,'r-.',label = "Predict")
+    plt.legend()
+    plt.show()    
+    
+    # pruning
+    test_data = load_dataset('ex1.txt')
+    pruned_tree = prune(re_tree, test_data)
+
+    pred = np.zeros((len(data_set),1))
+    for i in xrange(len(data_set)):
+        pred[i,:] = predict(pruned_tree, data_set[i,0:-1])    
+
+    plt.scatter(data_set[:,1],data_set[:,2],c='b',label = "Origin")
+    plt.scatter(data_set[:,1],pred,c='r',label = "Pruned Fit")
+    plt.legend()
+    plt.show()
+    
+    pred = pred[data_set[:,1].argsort(),:]
+    data_set = data_set[data_set[:,1].argsort(),:]
+    plt.plot(data_set[:,1],data_set[:,2],'b-',label = "Origin")
+    plt.plot(data_set[:,1],pred,'r-.',label = "Pruned Fit")
+    plt.legend()
+    plt.show()
+    
+    # testiing
+    pred = np.zeros((len(test_data),1))
+    for i in xrange(len(test_data)):
+        pred[i,:] = predict(pruned_tree, test_data[i,0:-1])    
+
+    pred = pred[test_data[:,1].argsort(),:]
+    test_data = test_data[test_data[:,1].argsort(),:]
+    plt.plot(test_data[:,1],test_data[:,2],'b-',label = "Origin")
+    plt.plot(test_data[:,1],pred,'r-.',label = "Predict")
+    plt.legend()
+    plt.show()  
+    err_prune = sum(np.power(test_data[:,-1] - pred.flatten(),2))
+    
+    print "Error:", err_no_prune
+    print "Error Pruned:", err_prune
+    
+    
+    tree = {"right":{"right":{"right":5, "left":6}, "left": 4}, "left":2}
+    
+
+
     import copy
     data_set = load_dataset('ex0.txt')
     re_tree = create_tree(data_set,ops=(0.0001,1))
@@ -255,7 +258,13 @@ if __name__ == "__main__":
 
 
 
-
+    
+    np.random.seed(0)
+    X = np.random.random((100,4))
+    y = np.random.randint(0,10,100)
+    dataset = np.concatenate((X,y.reshape(-1,1)),axis=1)
+    re_tree = create_tree(dataset,ops=(0.0000,1))
+    print re_tree
 
 
 
