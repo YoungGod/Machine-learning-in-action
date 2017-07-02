@@ -101,7 +101,7 @@ def adaboost_predict(X, weak_classifiers):
         prediction = stump_classify(X, classifier['feat'],classifier['thresh'],classifier['ineq'])
 #        print prediction
         agg_prediction += classifier['alpha']*prediction
-    return np.sign(agg_prediction)
+    return np.sign(agg_prediction), agg_prediction
 
 def load_data(filename):
     fr = open(filename)
@@ -111,6 +111,32 @@ def load_data(filename):
         dataset.append(instance[0:-1])
         label.append(instance[-1])
     return np.array(dataset), np.array(label)
+
+def plot_roc(pred_strengths, class_label):
+    cur = (1.0, 1.0)
+    y_sum = 0
+    num_pos_class = sum(np.array(class_label)==1.0)
+    y_step = 1/float(num_pos_class)
+    x_step = 1/float(len(class_label)-num_pos_class)
+    sorted_index = pred_strengths.argsort()
+    fig = plt.figure()
+    fig.clf()
+    ax = plt.subplot(111)
+    for index in sorted_index:
+        if class_label[index] == 1.0:
+            delt_x = 0; delt_y = y_step;
+        else:
+            delt_x = x_step; delt_y = 0;
+            y_sum += cur[1]
+        ax.plot([cur[0],cur[0]-delt_x],[cur[1],cur[1]-delt_y],c='b')
+        cur = (cur[0]-delt_x, cur[1]-delt_y)
+    ax.plot([0,1],[0,1],'b--')
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("ROC for AdaBoost Horse Colic Detection System")
+    ax.axis([0,1,0,1])
+    plt.show()
+    print "AUC is: ", y_sum*x_step
 
 if __name__ == "__main__":
 #    dataset, label = load_dataset()
@@ -132,10 +158,11 @@ if __name__ == "__main__":
     print "Training Error", err_rates[-1]
     
     X_test,y_test = load_data('horseColicTest2.txt')
-    prediction = adaboost_predict(X_test, weak_classifiers)
+    prediction, strength = adaboost_predict(X_test, weak_classifiers)
     err = np.ones(len(X_test))*(prediction!=y_test)
     err_rate = err.mean()
     print "Testing Error", err_rate
+    plot_roc(strength,y_test)
     
     from sklearn.ensemble import GradientBoostingClassifier
     clf = GradientBoostingClassifier(n_estimators=50, max_depth=1)
@@ -143,7 +170,9 @@ if __name__ == "__main__":
     prediction = clf.predict(X_test)
     err = np.ones(len(X_test))*(prediction!=y_test)
     err_rate = err.mean()
-    print "Sklearn Testing Error", err_rate    
+    print "Sklearn Testing Error", err_rate
+    
+   
     
     
     
